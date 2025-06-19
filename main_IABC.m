@@ -37,7 +37,6 @@ Onlooker_bee=nPop;
 % bee parameter
 a=1;
 
-
 %% Init first pop
 empty_individual.Position=[]; % Empty solution
 empty_individual.Cost=[];     % Empty cost function of that solution
@@ -142,14 +141,14 @@ for i = 1:1:numel(G.Edges.EndNodes)/2
 end
 for i = 1:N
     plot (BestSol.Position(i,1) , BestSol.Position(i,2),'ro');
-    %viscircles ([BestSol.Position(i,1) BestSol.Position(i,2)],rs(i),'Color', 'k');
-    %text (BestSol.Position(i,1) , BestSol.Position(i,2), num2str(i),'FontSize',15,'Color','red');
+    viscircles ([BestSol.Position(i,1) BestSol.Position(i,2)],rs(i),'Color', 'b');
+    text (BestSol.Position(i,1) , BestSol.Position(i,2), num2str(i),'FontSize',15,'Color','red');
 end
 
 %plot(obs_row, obs_col,'.', 'MarkerSize', 20, 'Color', 'red');
 xlim([0 100]);
 ylim([0 100]);
-title(['Coverage Ratio: ', num2str(100-BestSol.Cost*100),'%']);
+%title(['Coverage Ratio: ', num2str(100-BestSol.Cost*100),'%']);
 grid on;
 
 
@@ -157,3 +156,6 @@ grid on;
 % save(name)
 % end
 % end
+for i = 1:198
+    a(i)=Connectivity_graph(Graph(F1(i).Position,rc),[]);
+end

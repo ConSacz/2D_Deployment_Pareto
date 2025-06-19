@@ -22,14 +22,16 @@ Obstacle_Area = ones(100,100);
 MaxIt = 100;              % Maximum Number of Iterations
 a = 1;                    % Acceleration Coefficient Upper Bound
 N = 60;
-nPop=50;
-rc = 10;
+nPop=40;
+rc = 30;
 sink=[50 50];
 %name=['./data/hetero_target/',num2str(N),' nodes/case4/hetero_',num2str(trial),'.mat'];
 %name=['./data/comparison/barrier/ABC/ABC',num2str(N),'nodes_',num2str(trial),'.mat'];
 
 % homogenerous sensor 
 rs=ones(1,N)*10;
+stat(1,:)=rs;
+stat(2,1)=rc;
 
 % bee parameter
 Scout_bee=nPop;             % number of scout bees
@@ -49,16 +51,12 @@ for k = 1:nPop
     % gen sink node
     alpop (1,:)= sink;
     pop(k).Position=alpop;
-    pop(k).Cost(1)=Cov_Func_v2(pop(k).Position,rs,Obstacle_Area,Covered_Area);
-    pop(k).Cost(2) = Energy_consumption(pop(k).Position,rc);
-    pop(k).Cost(3) = Life_Time(pop(k).Position,rc);
+    pop(k).Cost = Cost_Func_MO(pop(k).Position,stat,Obstacle_Area,Covered_Area);
 end
 alpop = unifrnd(sink(1)-rc/2,sink(2)+rc/2,[N 2]);
 alpop (1,:)= sink;
 non_dom_pop(1).Position=alpop;
-non_dom_pop(1).Cost(1)=Cov_Func_v2(non_dom_pop(1).Position,rs,Obstacle_Area,Covered_Area);
-non_dom_pop(1).Cost(2) = Energy_consumption(non_dom_pop(1).Position,rc);
-non_dom_pop(1).Cost(3) = Life_Time(non_dom_pop(1).Position,rc);
+non_dom_pop(1).Cost = Cost_Func_MO(pop(1).Position,stat,Obstacle_Area,Covered_Area);
 clear k alpop sink;
 %%     ABC Main Loop
 for it = 1:MaxIt
@@ -68,10 +66,9 @@ for it = 1:MaxIt
         phi=a*unifrnd(-1, +1, [N 2])*(1-L(i)/MaxIt)^5;
         alpop = pop(i).Position + phi.*(pop(i).Position-pop(k).Position);
         alpop(:,1:2) = min(max(alpop(:,1:2), 1),size(Obstacle_Area,1)-1);
-        if Connectivity_graph(Graph(alpop(:,1:2),rc),[]) == 1
-            alpop_Cost(1) = Cov_Func_v2(alpop,rs,Obstacle_Area,Covered_Area);
-            alpop_Cost(2) = Energy_consumption(alpop,rc);
-            alpop_Cost(3) = Life_Time(alpop,rc);
+        if true
+        %if Connectivity_graph(Graph(alpop(:,1:2),rc),[]) == 1
+            alpop_Cost = Cost_Func_MO(alpop,stat,Obstacle_Area,Covered_Area);
 
             if checkDomination(alpop_Cost,pop(i).Cost) == 1
                 % alpop dominate pop
@@ -115,10 +112,9 @@ for it = 1:MaxIt
             phi=a*unifrnd(-1, +1, [1 2])*(1-L(i)/MaxIt)^2;
             alpop(k,1:2)  = pop(i).Position(k,1:2) + phi.*(pop(i).Position(k,1:2)-pop(i).Position(h,1:2));
             alpop(:,1:2) = min(max(alpop(:,1:2), 1),size(Obstacle_Area,1)-1);
-            if Connectivity_graph(Graph(alpop(:,1:2),rc),[]) == 1
-                alpop_Cost(1)=Cov_Func_v2(alpop,rs,Obstacle_Area,Covered_Area);
-                alpop_Cost(2) = Energy_consumption(alpop,rc);
-                alpop_Cost(3) = Life_Time(alpop,rc);
+            if true
+            %if Connectivity_graph(Graph(alpop(:,1:2),rc),[]) == 1
+                alpop_Cost = Cost_Func_MO(alpop,stat,Obstacle_Area,Covered_Area);
     
                 if checkDomination(alpop_Cost,pop(i).Cost) == 1
                     % alpop dominate pop
@@ -146,8 +142,8 @@ for it = 1:MaxIt
         data(i,2) = non_dom_pop(i).Cost(2);
         data(i,3) = non_dom_pop(i).Cost(3);
     end
-    plot3(data(:,1),data(:,2),data(:,3)*100,'o','Color','r')
-    %plot(data(:,1),data(:,2),'o','Color','r');
+    plot3(data(:,1),data(:,2),data(:,3),'o','Color','g')
+    %%plot(data(:,1),data(:,2),'o','Color','r');
     xlabel('Non-coverage cost function') 
     ylabel('Energy cost function') 
     zlabel('Life time')
