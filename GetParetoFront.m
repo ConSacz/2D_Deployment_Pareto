@@ -16,8 +16,8 @@ function paretoFront = GetParetoFront(non_dom_pop)
 
     paretoFrontAll = non_dom_pop(~isDominated);
     
-    % delete pop that have same Cost
-    costs = vertcat(paretoFrontAll.Cost);
+    %% delete pop that have same Cost
+    costs = reshape(vertcat(paretoFrontAll.Cost),[3 size(paretoFrontAll,1)])';
     [~, uniqueIdx] = unique(costs, 'rows', 'stable');
     paretoFront = paretoFrontAll(uniqueIdx);
 end

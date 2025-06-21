@@ -39,5 +39,6 @@ end
 %% Sum up 
 E_total=sum(Bat)/maxBat;
 % normalize 0-inf to 0-1
-E_normalized = round((E_total-minval)/(maxval-minval),2);
+%E_normalized = round((E_total-minval)/(maxval-minval),2);
+E_normalized = round(E_total,3);
 %E_normalized = round(E_total/(1+E_total),3);

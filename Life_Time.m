@@ -38,5 +38,6 @@ end
 %% Sum up 
 lifetime= maxBat/max(Bat);
 % normalized 0-inf to 1-0
-lifetime_normalized = round((10/lifetime-minval)/(maxval-minval),2);
+%lifetime_normalized = round((10/lifetime-minval)/(maxval-minval),2);
+lifetime_normalized = round(1/lifetime,3);
 %lifetime_normalized = round(1/(1+lifetime),2);
